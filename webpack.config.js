@@ -1,7 +1,7 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin'); //生成html
-
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const publicPath = '/'; //服务器路径
 const path = resolve(__dirname, 'dist');
@@ -26,7 +26,7 @@ module.exports = {
         // the entry point of our app
     ],
     output: {
-        filename: 'bundle.js',
+        filename: 'js/bundle.js',
         // the output bundle
 
         path: path,
@@ -57,8 +57,20 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [ 'style-loader', 'css-loader?modules', ],
+                use: ExtractTextPlugin.extract({
+                    use: 'css-loader?name=[name].[ext]'
+                }),
             },
+            //加载图片，如果突变大于1000bit则生成图片文件，否则就内置在js文件中
+            {
+                test: /\.(png|jpg|jpeg|gif)$/,
+                use: 'url-loader?limit=1000!&name=img/[name].[ext]'
+
+            },
+            {
+                test: /\.(eot|woff|ttf|woff2|svg)$/,
+                use: 'url-loader?limit=1000!&name=img/[name].[ext]',
+            }
         ],
     },
 
@@ -69,11 +81,9 @@ module.exports = {
         new webpack.NamedModulesPlugin(),
         // prints more readable module names in the browser console on HMR updates
         new HtmlWebpackPlugin({
-            filename: 'index.html',
             template: resolve(__dirname, './src/template/index.html'),
-            hash: true,    //为静态资源生成hash值
-
-        })
+        }),
+        new ExtractTextPlugin('css/[name].css')
     ],
 };
 

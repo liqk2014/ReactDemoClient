@@ -3,10 +3,11 @@
  */
 import React from 'react';
 import styles from './App.css';
-
+import imgs from  './hello.jpg'
 const App = () => (
     <div className={styles.app}>
-        <h2>Hello,World! </h2>
+        <h2>Hello, </h2>
+        <img src={imgs}/>
     </div>
 );
 

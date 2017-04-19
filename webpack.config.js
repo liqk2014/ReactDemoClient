@@ -44,8 +44,19 @@ module.exports = {
         contentBase: path,
         // match the output path
 
-        publicPath: publicPath
+        publicPath: publicPath,
         // match the output `publicPath`
+
+        proxy: {
+            "/api": {
+                // target: "https://cnodejs.org",
+                target: "http://www.slfteam.com",
+
+                secure: false
+                // pathRewrite: {"^/api" : ""}
+            }
+        }
+
     },
 
     module: {
@@ -81,9 +92,14 @@ module.exports = {
         new webpack.NamedModulesPlugin(),
         // prints more readable module names in the browser console on HMR updates
         new HtmlWebpackPlugin({
+            // filename: 'index.html',
             template: resolve(__dirname, './src/template/index.html'),
+            hash: true    //为静态资源生成hash值
+
         }),
+
         new ExtractTextPlugin('css/[name].css')
+
     ],
 };
 
